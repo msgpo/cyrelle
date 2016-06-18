@@ -1,0 +1,171 @@
+/* Defaults style */
+body {
+    /*background: url("../img/bg.jpg") no-repeat center center fixed;*/
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font: 15px 'open sans';
+    color: #24262d;
+    background-color: whitesmoke;
+}
+
+.header {
+    margin-bottom: 20px;
+    background-color: #2669D7;
+}
+
+.header-logo {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+
+.header-title {
+    font-size: 48px;
+    padding-bottom: 30px;
+    color: white;
+}
+
+.header-image:hover, .header-title:hover {
+    cursor: pointer;
+}
+
+.btn {
+    color: white;
+    border: none;
+}
+
+.btn-default {
+    background-color: #4285f4;
+}
+
+.btn-default:hover , .btn-default:active, .btn-default:active:focus, .btn-default:focus {
+    border: none;
+    color: white;
+    background-color: #4285f4;
+    outline: none;
+}
+
+.alert-danger {
+    background-color: #FE1B36;
+    color: white;
+}
+
+.alert-success {
+    color: white;
+    background-color: rgb(27, 180, 67);
+}
+
+a:hover, a:focus {
+    color: #4285F4;
+}
+
+.fa-border {
+    border: solid 0.05em #24262d;
+    border-radius: 5em;
+}
+
+/* Login Style*/
+.loginformcontainer {
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.a-login, .a-login:hover, .a-signup, .a-signup:hover {
+    color: #4285F4;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.a-signup:focus, .a-login:focus {
+    color: #4285F4;
+    text-decoration: none;
+}
+
+.a-signup {
+    padding: 0px 5px 0px 5px;
+}
+
+
+.socialgroup {
+    margin-top: 10px;
+}
+
+
+.socialgroup div i:hover {
+    cursor:pointer;
+}
+
+/* Sign Up Style */
+
+.signup {
+    margin-top: 10px;
+}
+
+.signup-header {
+    font-size: 28px;
+}
+
+#backbutton {
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid #4285F4;
+    color: #4285F4;
+    font-weight: 600;
+}
+
+.tooltipper {
+    color: #c2c2c2;
+    font-size: 13px;
+}
+
+.formsignup {
+    padding-top: 75px;
+    padding-right: 120px;
+    padding-left: 120px;
+    padding-bottom: 25px;
+}
+
+.formsignup form div.form-group {
+    padding-bottom: 5px;
+}
+
+.form-group div.alert {
+    margin-bottom: 0px;
+}
+
+.hr {
+    width: 25%;
+    margin-top: 10px;
+    border: 0;
+    border-top: 1px solid black;
+    height: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    display: inline-block;
+}
+
+.trackeroption span i:hover {
+    cursor: pointer;
+}
+
+.trackeroption span span.trackertitle {
+    font-size: 20px;
+    line-height: 45px;
+    font-weight: lighter;
+}
+
+label {
+    color: #FE1B36;
+}
+
+#signupspinner i {
+    color: #4285F4;
+}
+
+#signupspinner {
+    margin-right: 30px;
+}
+
+/* Forgot Password Style */
