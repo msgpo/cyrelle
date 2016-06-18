@@ -1,0 +1,122 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.5/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plugin/hover.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plugin/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_signup.css' %}">
+    <script type="text/javascript" src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/signup.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/signup_validator.js' %}"></script>
+
+    <title>Signup Online Activity Tracker</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 text-center header">
+            <div>
+                <a><img class="header-logo hvr-bubble-float-bottom" src="{% static 'img/lg.png' %}"></a>
+            </div>
+            <div class="header-title hidden-xs hvr-grow-rotate "><strong>Online</strong>Activity<strong>Tracker</strong></div>
+        </div>
+        <div id="formsignuppart1" class="formsignup col-lg-offset-3 col-lg-6">
+            <form id="signupform1"  class="form-horizontal">
+                <div class="form-group text-left">
+                    <span class="signup-header">Sign Up</span><br>
+                    <span>
+                        New to Online Activity Tracker? You're in the right place! Choose your account type below to get started.
+                        Please note, the account type cannot be changed once created so it's important to pick the right
+                        one.
+                    </span>
+                </div>
+                <div class="trackeroption">
+                    <span class="trackerbox1 col-xs-6 text-center hvr-float">
+                        <i class="fa fa-2x">
+                            <i class="fa fa-bus fa-border fa-5x">
+                            </i>
+                        </i>
+                        <br><span class="trackertitle">Teacher</span>
+                    </span>
+                    <span class="trackerbox2 col-xs-6 text-center hvr-float">
+                        <i class="fa fa-2x">
+                            <i class="fa fa-rocket fa-border fa-5x"></i>
+                        </i>
+                        <br><span class="trackertitle">Student</span>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div id="formsignuppart2"  class="formsignup col-lg-offset-3 col-lg-6">
+            <form id="signupform2" class="form-horizontal formsignuppart2" method="post" action="/signup/">
+                {% csrf_token %}
+                <div class="form-group text-left">
+                    <i id="usertrackerid" class="fa fa-user fa-fw fa-3x"></i><span class="signup-header headstart"></span><br>
+                    <span>Enter your username, name, email and a secure password to get started.</span>
+                </div>
+                <div class="form-group hidden">
+                    <span class="col-xs-12">
+                        {{ form.usertrackerid }}
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="col-xs-12">
+                        {{ form.username }}
+                        <label id="usernamelabel" class="animated">This field is required!</label>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="col-xs-6">
+                        {{ form.firstname }}
+                        <label id="firstnamelabel" class="animated">This field is required!</label>
+                    </span>
+                    <span class="col-xs-6">
+                        {{ form.lastname }}
+                        <label id="lastnamelabel" class="animated">This field is required!</label>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="col-xs-12">
+                        {{ form.email }}
+                        <label id="emaillabel" class="animated">This field is required!</label>
+                        <span class="tooltipper">We recommend you use the email provided by your school, college or university.</span>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="col-xs-12">
+                        {{ form.password }}
+                        <label id="passwordlabel" class="animated">This field is required!</label>
+                        <span class="tooltipper">At least 6 characters. We recommend 8 characters or more, with numbers + symbols.</span>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="col-xs-12">
+                        {{ form.passwordconf }}
+                        <label id="passwordconfirmationlabel" class="animated">This field is required!</label>
+                    </span>
+                </div>
+                {% if error %}
+                    <div class="form-group">
+                        <div class="signupfail alert alert-danger animated infinite bounce text-center">{{ message }}</div>
+                        <div class="signuppass alert alert-success animated infinite bounce text-center hidden"><i class="fa fa-spinner fa-spin fa-fw hidden spinner"></i><strong>Welcome!</strong> Please login.</div>
+                    </div>
+                {% endif%}
+                <div class="form-group">
+                    <span id="signupspinner"  class="pull-right hidden"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></span>
+                     <span class="col-xs-3 pull-right">
+                        <input id="confirmbutton" type="button" class="form-control btn btn-default" value="Confirm">
+                    </span>
+                    <span class="col-xs-3 pull-right">
+                        <input id="backbutton" type="button" class="form-control btn btn-default" value="Back">
+                    </span>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

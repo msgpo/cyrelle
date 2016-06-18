@@ -1,0 +1,565 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Import Jquery -->
+    <script type="text/javascript" src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    <!-- Import Bootstrap -->
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.5/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.5/js/bootstrap.min.js' %}"></script>
+    <!-- Import Font Awesome -->
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}">
+    <!-- Import hover.css -->
+    <link rel="stylesheet" href="{% static 'css/plugin/hover.css' %}">
+    <!-- Import animate.css -->
+    <link rel="stylesheet" href="{% static 'css/plugin/animate.css' %}">
+    <!-- Import Sidebars -->
+    <link rel="stylesheet" href="{% static 'css/plugin/sidebar.css' %}">
+    <script type="text/javascript" src="{% static 'js/plugin/jquery.sidebar.min.js' %}"></script>
+    <!-- Import Alertify -->
+    <script type="text/javascript" src="{% static 'js/plugin/alertify.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/plugin/alertify.css' %}">
+    <!-- Import my own stylesheets and scripts. -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script type="text/javascript" src="{% static 'js/dashboard.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/updateinfo.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/gradingperiod.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/subjectcontroller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/sectioncontroller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/assessmentcontroller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/studentcontroller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/recordcontroller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/features/viewgradescontroller.js' %}"></script>
+    <title>OAT Dashboard</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand animated tada">
+                <i class="fa fa-reorder sb-toggle-left"></i>
+            </div>
+            <div class="navbar-header">
+                <a class="navbar-brand sb-toggle-left animated tada">
+                    <span class="bold">Online</span><span class="light">Activity</span><span class="bold">Tracker</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Clock Division -->
+    <div class="container clockbar animated bounceInUp">
+         <div class="pull-right">
+            <div class="col-xs-1 text-center clock hvr-hang">
+                <div class="clock-header"></div>
+                <div id="datenumber" class="datebig"></div>
+                <div id="monthword" class="datesmall"></div>
+            </div>
+            <div class="col-xs-1 text-center clock hvr-hang">
+                <div class="clock-header"></div>
+                <div id="hour" class="timebig"></div>
+                 <div id="dateword" class=""></div>
+            </div>
+            <div class="col-xs-1 text-center clock hvr-hang">
+                <div class="clock-header"></div>
+                <div id="minute" class="datebig"></div><br>
+                <div id="seconds" class="datesmall"></div>
+                <div id="ampm" class="datesmall"></div>
+            </div>
+        </div>
+        <div class="pull-left" data-toggle="modal" data-target="#changeGradingModal">
+            <div class="col-xs-1 text-center grading hvr-buzz">
+                <div class="clock-header"></div>
+                <div id="gradingnumber" class="datebig">{{ grading_period }}</div><br>
+                <div id="gradingword" class="datesmall">Grading</div>
+            </div>
+        </div>
+        <div class="pull-left">
+             <div class="col-xs-1 text-center yearly hvr-hang">
+                <div class="clock-header"></div>
+                <span id="schoolyear">SCHOOL YEAR<br><span id="syyear"></span></span><br>
+            </div>
+        </div>
+    </div>
+    <!--Content Bar -->
+    <div id="mainbar" class="container contentbar">
+        <div class="contentbar-body">
+            <div class="contentbarheader">Dashboard |
+                <span class="contentbar-title">Good day ,</span>
+                <span class="contentbar-firstname bold">{{ firstname }}</span>
+                <span class="contentbar-title">!</span>
+                <div class="contentbar-subtitle light">Today is a great day to try. Step out! Your life is waiting! Have fun teaching!</div>
+            </div>
+        </div>
+        <div class="col-xs-12 contentbarevents"></div>
+    </div>
+    <!--Subjects Bar -->
+    <div id="subjectsbar" class="container contentbar">
+        <div class="pull-right filterer">
+            <div class="dropdown">
+                <span class="fa-2x glyphicon glyphicon-th dropdown dropdown-toggle dropper" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                </span>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdownsubMenu1"></ul>
+            </div>
+        </div>
+        <div class="contentbar-body">
+            <div class="contentbarheader">
+                Manage Subjects
+                <span class="hidden contentbar-error animated infinite rubberBand"> Error! Please fill out forms!</span>
+                <span class="hidden contentbar-error-redundant animated infinite rubberBand"> Error! Such subject and section already exists!</span>
+            </div>
+        </div>
+        <hr>
+        <div id="classes_field" class="col-xs-12">
+            <div class="col-xs-12">
+                <form id="createSubjectForm" class="form-group">
+                    {% csrf_token %}
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="subjectname" type="text" class="form-control" placeholder="Subject Name">
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <select id="section-drop-down" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <select id="subject-type-drop-down" class="form-control"></select>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="createSubjectButton" type="button" class="form-control btn btn-primary hvr-float" value="Create Subject">
+                    </div>
+                </form>
+            </div>
+            <div id="subjectscontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="subjectbigspinner" class="text-center"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!--Sections Bar -->
+    <div id="sectionsbar" class="container contentbar">
+        <div class="pull-right filterer">
+            <div class="dropdown">
+                <span class="fa-2x glyphicon glyphicon-th dropdown dropdown-toggle dropper" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" id="dropdownsubMenu2"></ul>
+            </div>
+        </div>
+        <div class="contentbar-body">
+            <div class="contentbarheader">
+                 Manage Sections
+                <span class="hidden sectionsbar-error animated infinite rubberBand"> Error! Please fill out forms!</span>
+                <span class="hidden sectionsbar-error-redundant animated infinite rubberBand"> Error! Such section already exists!</span>
+            </div>
+        </div>
+        <hr>
+        <div id="sections_field" class="col-xs-12">
+            <div class="col-xs-12">
+                <form class="form-group">
+                    <div class="col-xs-12 col-sm-9">
+                        <input type="text" class="form-control" placeholder="Section Name">
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="createSectionButton" type="button" class="form-control btn btn-primary  hvr-float-shadow" value="Create Section">
+                    </div>
+                </form>
+            </div>
+            <div id="sectionscontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="sectionbigspinner" class="text-center"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!--Students Bar -->
+    <div id="studentstopbar" class="container text-center contentbar">
+        <div id="studentmansubbar" class="col-xs-offset-2 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div>Back to Assessments</div>
+        </div>
+        <div onclick="viewGrades()" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-calculator fa-2x"></i></div>
+            <div>View Students' Grades</div>
+        </div>
+        <div onclick="viewSection($('input[name=assessmentsectionidhidden]').val(), 'justno')" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-users fa-2x"></i></div>
+            <div>View List of Students</div>
+        </div>
+    </div>
+    <div id="studentsbar" class="container contentbar">
+        <div class="contentbar-body">
+            <div class="contentbarheader">
+                Section <span class="bold"></span> <span class="light">Students</span><input class="form-control hidden" name="contentbarsectionid">
+                <span class="hidden studentsbar-error animated infinite rubberBand"> Error! Please fill out forms!</span>
+                <span class="hidden studentsbar-error-redundant animated infinite rubberBand"> Error! Such student already exists!</span>
+            </div>
+        </div>
+        <hr>
+        <div id="students_field" class="col-xs-12">
+            <div class="col-xs-12">
+                <form class="form-group">
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="firstname" type="text" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="middlename" type="text" class="form-control" placeholder="Middle Initial">
+                    </div>
+                     <div class="col-xs-12 col-sm-3">
+                        <input name="lastname" type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="addStudentButton" type="button" class="form-control btn btn-primary  hvr-float-shadow" value="Add Student">
+                    </div>
+                </form>
+            </div>
+            <div id="studentscontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="studentbigspinner" class="text-center"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!-- Assessments Bar -->
+    <div id="assessmenttopbar" class="container text-center contentbar">
+        <div id="mansubbutt" class="col-xs-offset-2 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div>Back to Subjects</div>
+        </div>
+        <div onclick="viewGrades()" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-calculator fa-2x"></i></div>
+            <div>View Students' Grades</div>
+        </div>
+        <div onclick="viewSection($('input[name=assessmentsectionidhidden]').val(), 'justno')" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-users fa-2x"></i></div>
+            <div>View List of Students</div>
+        </div>
+    </div>
+    <div id="recgradbar" class="container contentbar">
+       <div class="contentbar-body">
+            <div class="contentbarheader">
+                Assessments: <input class="hidden form-control" name="recgradbarsubjectid">Subject <span class="bold"></span> Section <span class="light"></span>
+                <span class="hidden recgradbar-error animated infinite rubberBand"> Error! Please fill out forms!</span>
+                <span class="hidden recgradbar-error-redundant animated infinite rubberBand"> Error! Such assessment already exists!</span>
+                <input name="assessmentsectionidhidden" class="form-control hidden">
+            </div>
+       </div>
+        <hr>
+        <div id="record_grades_field" class="col-xs-12">
+            <div class="col-xs-12">
+                <form class="form-group">
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="recgradassessmentname" type="text" class="form-control" placeholder="Assessment Name">
+                    </div>
+                     <div class="col-xs-12 col-sm-3">
+                        <select id="recgradassessmenttype" class="form-control">
+                            <option value="0" disabled="disabled" selected="selected">Assessment Type</option>
+                            <option value="1">Written Works</option>
+                            <option value="2">Performance Tasks</option>
+                            <option value="3">Quarterly Exams</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input name="recgradtotal" type="number" class="form-control" placeholder="Total">
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <input type="button" class="form-control btn btn-primary  hvr-float-shadow" value="Create Assessment">
+                    </div>
+                </form>
+            </div>
+            <div id="assessmentscontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="assessmentbigspinner" class="text-center" value="show"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!--Record Bar -->
+    <div id="recgradtopbar" class="container text-center contentbar">
+        <div id="recgradmanass" class="col-xs-offset-2 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div>Back to Subjects</div>
+        </div>
+        <div onclick="viewGrades()" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-calculator fa-2x"></i></div>
+            <div>View Students' Grades</div>
+        </div>
+        <div onclick="viewSection($('input[name=assessmentsectionidhidden]').val(), 'justno')" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-users fa-2x"></i></div>
+            <div>View List of Students</div>
+        </div>
+    </div>
+    <div id="recordbar" class="container contentbar">
+        <div class="contentbar-body">
+            <div class="contentbarheader">
+                Assessment: <span class="bold"></span> <span class="light"></span><span class="bold">   TOTAL: </span><span class="light"></span><input class="form-control hidden" name="contentbarassessmentid">
+                <span class="hidden recordbar-error animated infinite tada"> Error! Please recheck the score!</span>
+            </div>
+        </div>
+        <div id="record_field" class="col-xs-12">
+            <div class="col-xs-12">
+                <form class="form-group">
+                    <div class="col-xs-12">
+                        <input onclick="editAllButton()" name="editAllBtn" type="button" class="form-control btn btn-primary  hvr-float-shadow" value="Edit All">
+                    </div>
+                    <div class="col-xs-12">
+                        <input onclick="saveAllButton()" name="saveAllBtn" type="button" class="hidden form-control btn btn-primary  hvr-float-shadow" value="Save All">
+                    </div>
+                </form>
+            </div>
+            <div id="recordcontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="recordbigspinner" class="text-center"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!--View Grades Bar -->
+    <div id="viewgradestopbar" class="container text-center contentbar">
+        <div id="manassbutt" class="col-xs-offset-2 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div>Back to Assessments</div>
+        </div>
+        <div onclick="viewGrades()" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-calculator fa-2x"></i></div>
+            <div>View Students' Grades</div>
+        </div>
+        <div onclick="viewSection($('input[name=assessmentsectionidhidden]').val(), 'justno')" class="col-xs-offset-1 col-xs-2 assessmentoption hvr-sink">
+            <div><i class="fa fa-users fa-2x"></i></div>
+            <div>View List of Students</div>
+        </div>
+    </div>
+    <div id="viewgradesbar" class="container contentbar">
+        <div class="pull-right filterer">
+                <div class="dropdown">
+                  <span class="fa-2x glyphicon glyphicon-th dropdown dropdown-toggle dropper" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  </span>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu3" id="dropdownsubMenu3">
+                      <li onclick="getGrades('1st Grading');"><a>1st Grading <i class="hidden fa fa-check fa-fw"></i></a></li>
+                      <li onclick="getGrades('2nd Grading');"><a>2nd Grading <i class="hidden fa fa-check fa-fw"></i></a></li>
+                      <li onclick="getGrades('3rd Grading');"><a>3rd Grading <i class="hidden fa fa-check fa-fw"></i></a></li>
+                      <li onclick="getGrades('4th Grading');"><a>4th Grading <i class="hidden fa fa-check fa-fw"></i></a></li>
+                      <li role="separator" class="divider"></li>
+                      <li onclick="getGrades('ALL');"><a>Show Overall <i class="hidden fa fa-check fa-fw"></i></a></li>
+                  </ul>
+                </div>
+            </div>
+        <div class="contentbar-body">
+            <div class="contentbarheader">
+                Students' Grades: Subject <span class="bold"></span> Section <span class="light"></span>
+                <input class="form-control hidden" name="viewgradesbarsubjectid">
+            </div>
+        </div>
+        <div id="viewgrades_field" class="col-xs-12">
+            <div id="viewgrradescontainer" class="col-xs-12 container">
+                <hr>
+                <span></span>
+                <div id="viewgradesbigspinner" class="text-center"><i class="fa fa-spin fa-circle-o-notch fa-5x"></i></div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar Bar -->
+    <div class="sidebar left">
+            <div class="row">
+                <div class="col-xs-12 options text-center">
+                    <a data-toggle="tooltip" data-placement="left" title="Go Home" id="ophome"><div><i class="fa fa-desktop fa-3x"></i></div></a>
+                    <a data-toggle="tooltip" data-placement="left" title="Logout" href="/logout/"><div><i class="fa fa-power-off fa-3x"></i></div></a>
+                </div>
+                <div class="clearfix"><hr></div>
+                <hr>
+                <div class="col-xs-12 sidebarbutts text-center">
+                    <div data-toggle="tooltip" data-placement="left" title="Manage Subjects" id="mansub" class=""><i class="fa fa-coffee fa-3x"></i></div>
+                    <div data-toggle="tooltip" data-placement="left" title="Manage Sections" id="mansec" class=""><i class="fa fa-comment fa-3x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modals -->
+    <div class="modal fade" id="changeGradingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Change Grading Period</h4>
+          </div>
+          <div class="modal-body container col-xs-12">
+                <form id="changeGradingForm" class="form-group">
+                    <div id="1stgrad" class="col-xs-3 hvr-buzz">
+                        <input type="button" class="form-control btn btn-danger" value="1st Grading">
+                    </div>
+                    <div id="2ndgrad" class="col-xs-3 hvr-buzz">
+                        <input  name="" type="button" class="form-control btn btn-danger" value="2nd Grading">
+                    </div>
+                    <div id="3rdgrad" class="col-xs-3 hvr-buzz">
+                        <input name="" type="button" class="form-control btn btn-danger" value="3rd Grading">
+                    </div>
+                     <div id="4thgrad" class="col-xs-3 hvr-buzz">
+                        <input name="" type="button" class="form-control btn btn-danger" value="4th Grading">
+                    </div>
+                </form>
+          </div>
+            <div class="col-xs-12 gradingperiodfooter text-center animated tada infinite hidden">Error! You can't time travel!</div>
+          <div class="modal-footer">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"><i class="fa fa-gear fa-fw"></i>SETTINGS</h4>
+          </div>
+          <div class="modal-body col-xs-12">
+              <div class="col-sm-3 modal-left">
+                  <div class="modal-selected-option opgen">General</div>
+                  <div class="opprof">Profile</div>
+                  <div class="opem">Emails</div>
+                  <div class="oppass">Password</div>
+                  <div class="opsch">School</div>
+                  <div class="oploc">Local</div>
+                  <div class="opab">Abouts</div>
+              </div>
+              <div  id="op-gen" class="col-sm-9 modal-right">
+                  <div class="modal-right-header">General</div>
+                  <hr>
+                    <div class="col-xs-12">
+                      <div>
+                          Click update profile picture to change your profile picture.
+                      </div>
+                        <div>
+                            <img class="img-circle img-responsive" src="{% static 'img/profile.png' %}">
+                        </div>
+                        <div>
+                            <form>
+                                <input type="file">
+                                <input type="submit" value="upload">
+                            </form>
+                        </div>
+                  </div>
+              </div>
+              <div  id="op-prof" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">Profile</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          To change your name, just fill up the requirements below.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>First Name: </label>
+                              <input name="modFirstname" type="text" class="form-control" placeholder="First Name" value="{{ firstname }}">
+                              <label>Last Name: </label>
+                              <input name="modLastname" type="text" class="form-control" placeholder="Last Name" value="{{ lastname }}">
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div  id="op-em" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">Emails</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          In order to change your email address, just fill up the requirements below.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>Email: </label>
+                              <input name="modEmail" type="email" class="form-control" placeholder="Email Address" value="{{ email }}">
+                              <label>Facebook: </label>
+                              <input name="modFb" type="url" class="form-control" placeholder="facebook.com">
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div  id="op-pass" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">Password</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          To change your password, enter your current password, new password(conforming to the requirements below)
+                          and your new password again to ensure it was entered correctly.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>Current Password: </label>
+                              <input type="password" class="form-control" placeholder="Type current password.">
+                              <label>New Password: </label>
+                              <input name="modPass" type="password" class="form-control" placeholder="Type new password.">
+                              <label>Password: </label>
+                              <input type="password" class="form-control" placeholder="Confirm  Passord">
+                          </div>
+                      </form>
+                      <div>
+                          <span class="bold">Passwords</span>
+                      </div>
+                      <div>
+                          Your new password must be atleast 6 characters long. For increased security, we recommend passwords
+                          should be at least 10 characters, contain atleast 1 number or more special characters.
+                      </div>
+                  </div>
+              </div>
+              <div  id="op-sch" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">School</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          In order to change your school address or name, just fill up the requirements below.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>School: </label>
+                              <input name="modSchool" type="text" class="form-control" placeholder="School Name">
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div  id="op-loc" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">Local</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          In order to change your home address, just fill up the requirements below.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>Address: </label>
+                              <input name="modHome" type="text" class="form-control" placeholder="Home Address">
+                              <div class="form-horizontal">
+                              <label>Postal Code: </label>
+                              <input name="modPosCode" type="text" class="form-control" placeholder="Postal Code">
+                          </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div  id="op-ab" class="col-sm-9 modal-right hidden">
+                  <div class="modal-right-header">Abouts</div>
+                  <hr>
+                  <div class="col-xs-12">
+                      <div>
+                          Tell us something about yourself. What are your secrets in becoming a great teacher? Tell us about it.
+                      </div>
+                      <form class="form-group">
+                          <div class="form-horizontal">
+                              <label>School: </label>
+                              <textarea name="modText" class="form-control" placeholder="Write anything about yourself." rows="10"></textarea>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <input type="button" class="btn btn-default hvr-float" data-dismiss="modal" value="Close">
+            <input id="saveChangesButt" type="button" class="btn btn-info hvr-float" data-dismiss="modal" value="Save Changes">
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
