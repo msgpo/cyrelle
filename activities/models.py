@@ -1,13 +1,14 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 
 
 #User Profile Model
 class UserProfile(models.Model):
 	user = models.ForeignKey(User)
-	role = models.Charfield(max_length=7, default='teacher')
+	role = models.CharField(max_length=7, default='teacher')
 
 #Subject Model
 class Subject(models.Model):
