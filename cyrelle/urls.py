@@ -17,5 +17,21 @@ from django.conf.urls import url
 from django.contrib import admin
 
 urlpatterns = [
+    #Admin
     url(r'^admin/', admin.site.urls),
+    
+    # Login
+    url(r'^login/$', Login.as_view()),
+
+    # Forgot Password
+    url(r'^forgot/$', forgot),
+
+    # Signup
+    url(r'^signup/$', Signup.as_view()),
+
+    # Dashboard
+    url(r'^dashboard/$', dashboard),
+
+    # Logout
+    url(r'^logout/$', logout),
 ]
