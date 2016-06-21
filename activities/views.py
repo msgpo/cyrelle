@@ -1,17 +1,17 @@
 from django.shortcuts import render
 
 def index(request):
-	return render(request, 'index.html')
+    return render(request, 'index.html')
 
 
 class Login(View):
-	def get(self, request):
-		form = LoginForm()
-		error = False
-		return render(request, 'login.html', {'form': form, 'error': error})
+    def get(self, request):
+        form = LoginForm()
+        error = False
+        return render(request, 'login.html', {'form': form, 'error': error})
 
-		def post(self, request):
-			form = LoginForm(self.request.POST)
+        def post(self, request):
+            form = LoginForm(self.request.POST)
             if form.is_valid():
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
