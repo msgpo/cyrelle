@@ -96,7 +96,7 @@ def dashboard(request):
         system = UserProfile.objects.get(user=user_instance)
         return render(request, 'dashboard.html', {'fullname': fullname, 'firstname': user_instance.first_name,
                                                   'lastname': user_instance.last_name,
-                                                  'email': user_instance.email, 'role': system.role.name})
+                                                  'email': user_instance.email, 'role': system.role})
     else:
         return HttpResponseRedirect('/login/')
 
