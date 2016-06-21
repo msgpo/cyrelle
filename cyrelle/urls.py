@@ -15,19 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from activities import views
 
 urlpatterns = [
     #Admin
     url(r'^admin/', admin.site.urls),
     
     # Login
-    url(r'^login/$', Login.as_view()),
+    #url(r'^login/$', Login.as_view()),
 
     # Forgot Password
-    url(r'^forgot/$', forgot),
+    #url(r'^forgot/$', forgot),
 
     # Signup
-    url(r'^signup/$', Signup.as_view()),
+    #url(r'^signup/$', Signup.as_view()),
 
     # Dashboard
     url(r'^dashboard/$', dashboard),
