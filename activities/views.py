@@ -1,5 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import View
+from activities.forms import *
+from activities.models import *
+import json
+from django.contrib import auth
+from django.http import *
+from django.db import connection
+
 
 def index(request):
     return render(request, 'index.html')
