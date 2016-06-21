@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic import View
 
 def index(request):
     return render(request, 'index.html')
@@ -10,23 +11,23 @@ class Login(View):
         error = False
         return render(request, 'login.html', {'form': form, 'error': error})
 
-        def post(self, request):
-            form = LoginForm(self.request.POST)
-            if form.is_valid():
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password']
-                user = auth.authenticate(username=username, password=password)
-                if user is not None and user.is_active:
-                    auth.login(request, user)
-                    return HttpResponseRedirect('/dashboard')
-                else:
-                    error = True
-                    message = 'Invalid password/username!'
-                    return render(request, 'login.html', {'form': form, 'error': error, 'message': message})
+    def post(self, request):
+        form = LoginForm(self.request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = auth.authenticate(username=username, password=password)
+            if user is not None and user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect('/dashboard')
             else:
                 error = True
-                message = 'Please fill out all the required forms!'
+                message = 'Invalid password/username!'
                 return render(request, 'login.html', {'form': form, 'error': error, 'message': message})
+        else:
+            error = True
+            message = 'Please fill out all the required forms!'
+            return render(request, 'login.html', {'form': form, 'error': error, 'message': message})
 
 
 def logout(request):
